@@ -17,7 +17,7 @@ cd 3d-terrain-deep-dream
 
 - Download a DEM file (e.g.[USGS Central-Colorado](https://www.sciencebase.gov/catalog/item/5acecd0ee4b0e2c2dd1a6acf))
 
-- Extract into `data/DEM`
+- Extract into `dem/`
 
 ## Train The Model
 ```bash
