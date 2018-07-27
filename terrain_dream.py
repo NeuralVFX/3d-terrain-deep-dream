@@ -7,10 +7,9 @@ import torch.nn as nn
 from tqdm import tqdm
 from torch.utils.data import *
 import neural_renderer as nr
-import matplotlib
-matplotlib.use('agg')
-
 import matplotlib.pyplot as plt
+
+plt.switch_backend('agg')
 
 from util import helpers as helper
 from util import loaders as load

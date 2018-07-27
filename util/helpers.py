@@ -1,7 +1,9 @@
-import matplotlib.pyplot as plt
 import torch.nn as nn
 import torch
+import matplotlib.pyplot as plt
 
+
+plt.switch_backend('agg')
 
 ############################################################################
 # Helper Utilities
