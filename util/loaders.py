@@ -1,8 +1,8 @@
 import random
+import glob
+import torch
 from torch.utils.data import *
 from torchvision import transforms
-import torch
-import glob
 import numpy as np
 import cv2
 

@@ -1,12 +1,11 @@
-import torch.optim as optim
+import random
 import torch
-import time
+import torch.optim as optim
 import torch.nn.functional as F
 import torch.nn as nn
 from tqdm import tqdm
 from torch.utils.data import *
 import neural_renderer as nr
-import random
 import matplotlib.pyplot as plt
 
 from util import helpers as helper
@@ -51,7 +50,8 @@ class TerrainDream:
         'disc_layers': 4,
         'render_res':256,
         'save_root': 'austria',
-        'save_every': 1}
+        'save_every': 1,
+        'loader_workers': 1}}
 
     dream = TerrainDream(params)
     dream.train()
@@ -72,7 +72,8 @@ class TerrainDream:
                                                           1,
                                                           shuffle=True,
                                                           output_res=params["render_res"],
-                                                          perc=params['test_perc'])
+                                                          perc=params['test_perc'],
+                                                          workers=params['loader_workers'])
 
         print(f'Data Loader Initialized: {self.data_len} Images')
 
@@ -243,7 +244,7 @@ class TerrainDream:
                 self.train_disc(fake, real)
 
                 # append all losses in loss dict #
-                [self.loss_epoch_dict[loss].append(self.loss_batch_dict[loss].data[0]) for loss in self.losses]
+                [self.loss_epoch_dict[loss].append(self.loss_batch_dict[loss].data.item()) for loss in self.losses]
                 self.loop_iter += 1
                 self.current_iter += 1
 
