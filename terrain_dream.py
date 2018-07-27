@@ -2,6 +2,7 @@ import torch.optim as optim
 import torch
 import time
 import torch.nn.functional as F
+import torch.nn as nn
 from tqdm import tqdm
 from torch.utils.data import *
 import neural_renderer as nr
@@ -78,6 +79,8 @@ class TerrainDream:
             self.model_dict[i].cuda()
             self.model_dict[i].train()
         print('Networks Initialized')
+
+        self.l1_loss = nn.L1Loss()
 
         self.light_dir, self.light_color_directional, self.eye = random_eye_and_light()
 
