@@ -3,11 +3,11 @@ import torch
 import time
 from tqdm import tqdm
 from torch.utils.data import *
+import neural_renderer as nr
+import random
 import matplotlib
-
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
-import random
 
 from util import helpers as helper
 from util import loaders as load
