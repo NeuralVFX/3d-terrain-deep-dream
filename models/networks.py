@@ -87,7 +87,7 @@ class Model(nn.Module):
         self.vertices = vertices
 
         # Initialize random textures
-        blurry_noise = gaussian_filter(np.random.normal(0, .5, (3, self.res, self.res)), sigma=3)
+        blurry_noise = gaussian_filter(np.random.normal(0, .5, (3, self.res, self.res)), sigma=1)
         textures = torch.FloatTensor(blurry_noise).cuda()
         self.textures = nn.Parameter(textures)
 
