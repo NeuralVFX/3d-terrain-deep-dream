@@ -68,7 +68,7 @@ class Model(nn.Module):
     # Loaded for DEM file, and storage for out textures
     def __init__(self, geo, dem):
         super(Model, self).__init__()
-        print (f'Loading OBJ: {obj}')
+        print(f'Loading OBJ: {obj}')
         vertices, faces = nr.load_obj(f'./{geo}')
         self.res = int(math.sqrt(vertices.shape[0]))
         vertices = vertices[None, :, :]
@@ -76,7 +76,7 @@ class Model(nn.Module):
         self.faces = faces[None, :, :]
 
         # Load_dem
-        print (f'Loading DEM: {dem}')
+        print(f'Loading DEM: {dem}')
         geo = gdal.Open(dem)
         geo_arr = geo.ReadAsArray()
         scaled_down = cv2.resize(geo_arr, (self.res, self.res), interpolation=cv2.INTER_AREA)
