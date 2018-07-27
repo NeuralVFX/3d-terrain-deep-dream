@@ -1,4 +1,5 @@
 import random
+import time
 import torch
 import torch.optim as optim
 import torch.nn.functional as F
@@ -15,16 +16,16 @@ from models import networks as n
 
 def random_eye_and_light():
     light_dir = [(random.random() - .5) * 2,
-                  random.random(),
-                  (random.random() - .5) * 2]
+                 random.random(),
+                 (random.random() - .5) * 2]
 
     light_color_directional = [(random.random() * .5) + 1.3,
-                                (random.random() * .5) + 1.3,
-                                (random.random() * .5) + 1]
+                               (random.random() * .5) + 1.3,
+                               (random.random() * .5) + 1]
 
     eye = nr.get_points_from_angles((random.random() * .5) + 1.5,
-                                     (random.random() * 10) + 20,
-                                     random.random() * 360)
+                                    (random.random() * 10) + 20,
+                                    random.random() * 360)
 
     return light_dir, light_color_directional, eye
 
@@ -197,11 +198,11 @@ class TerrainDream:
         light_dir, light_color_directional, eye = self.get_eye_and_light()
 
         fake_data = self.render(vert_prep,
-                             face,
-                             tex_prep,
-                             eye,
-                             light_dir=light_dir,
-                             light_color_directional=light_color_directional)
+                                face,
+                                tex_prep,
+                                eye,
+                                light_dir=light_dir,
+                                light_color_directional=light_color_directional)
 
         fake = self.transform.norm(fake_data, tensor=True)
 

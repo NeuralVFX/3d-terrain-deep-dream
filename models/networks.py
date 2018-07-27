@@ -101,7 +101,7 @@ class Render(nn.Module):
         super(Render, self).__init__()
         renderer = nr.Renderer(camera_mode='look_at',
                                image_size=res,
-                               orig_size= res*2)
+                               orig_size=res*2)
 
         renderer.light_intensity_directional = .9
         renderer.light_intensity_ambient = .75
