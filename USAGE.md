@@ -33,7 +33,7 @@ python train.py --load_state output/austria_3.json --render_res 256 --train_epoc
 
 ```
 --obj_file', default='/geo/grid_256.obj', type=str      # Obj file  - must be a square grid
---dem_file, default='/data/USGS/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img',
+--dem_file, default='/dem/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img',
                                     type=str            # Train folder name
 --disc_layers', default=3, type=int                     # Count of conv layers in discriminator
 --disc_filters', default=512, type=int                  # Filter count for discrimintors
