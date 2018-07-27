@@ -202,8 +202,8 @@ class MountainDataset(Dataset):
         return self.ids.size
 
 
-def data_load(transform, batch_size, shuffle=False, output_res=128, perc=1):
+def data_load(transform, batch_size, shuffle=False, output_res=128, perc=1, workers = 1):
     # Wrapper for loader
     dataset = MountainDataset(transform, output_res=output_res, perc=perc)
     datalen = dataset.__len__()
-    return torch.utils.data.DataLoader(dataset, batch_size=batch_size, num_workers=1, shuffle=shuffle), datalen
+    return torch.utils.data.DataLoader(dataset, batch_size=batch_size, num_workers=workers, shuffle=shuffle), datalen
