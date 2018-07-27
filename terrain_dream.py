@@ -43,8 +43,8 @@ class TerrainDream:
     %matplotlib inline # use if in Jupyter Notebook
 
     params = {
-        'obj_file':'/geo/grid_256.obj',
-        'dem_file':'/data/USGS/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img',
+        'obj_file':'geo/grid_256.obj',
+        'dem_file':'dem/USGS/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img',
         'disc_layers': 4,
         'disc_filters': 512,
         'lr_disc': .001,
