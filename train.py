@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("cmd", help=argparse.SUPPRESS, nargs="*")
 parser.add_argument('--obj_file', nargs='?', default='/geo/grid_256.obj', type=str)
 parser.add_argument('--dem_file', nargs='?',
-                    default='/data/USGS/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img', type=str)
+                    default='/dem/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img', type=str)
 parser.add_argument('--disc_filters', nargs='?', default=512, type=int)
 parser.add_argument('--disc_layers', nargs='?', default=4, type=int)
 parser.add_argument('--lr_disc', nargs='?', default=.001, type=float)
