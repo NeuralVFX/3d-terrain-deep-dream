@@ -168,7 +168,7 @@ class TerrainDream:
         # create render, and use discriminator to dream, backprop to the mesh#
         self.opt_dict["M"].zero_grad()
 
-        tex, vert, face = self.model_dict["M"]
+        tex, vert, face = self.model_dict["M"]()
         tex_a = self.v2t(tex.unsqueeze(0))
         tex_prep = (F.tanh(tex_a).permute(0, 2, 3, 1).contiguous().view(1, face.shape[1], 2, 2, 2, 3) * .5) + .5
         vert_prep = vert.view(3, self.model_dict["M"].mesh_res,
