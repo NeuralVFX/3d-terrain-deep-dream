@@ -37,7 +37,8 @@ def random_eye_and_light():
 class TerrainDream:
     """
     Example usage if not using command line:
-    %matplotlib inline
+    
+    %matplotlib inline # use if in Jupyter Notebook
 
     params = {
         'obj_file':'/geo/grid_256.obj',
@@ -52,7 +53,7 @@ class TerrainDream:
         'render_res':256,
         'save_root': 'austria',
         'save_every': 1,
-        'loader_workers': 1}}
+        'loader_workers': 1}
 
     dream = TerrainDream(params)
     dream.train()
