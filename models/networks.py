@@ -68,7 +68,7 @@ class Model(nn.Module):
     # Loaded for DEM file, and storage for out textures
     def __init__(self, geo, dem):
         super(Model, self).__init__()
-        print(f'Loading OBJ: {obj}')
+        print(f'Loading OBJ: {geo}')
         vertices, faces = nr.load_obj(f'./{geo}')
         self.res = int(math.sqrt(vertices.shape[0]))
         vertices = vertices[None, :, :]
