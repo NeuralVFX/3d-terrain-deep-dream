@@ -179,9 +179,7 @@ class MountainDataset(Dataset):
     def transform_set(self, image_a):
         # Apply augmentation
         trans_dict = {'image': image_a}
-
-        if self.train:
-            trans_dict = self.data_transforms(trans_dict)
+        trans_dict = self.data_transforms(trans_dict)
         return np.rollaxis(self.transform.norm(trans_dict['image']), 2)
 
     def __getitem__(self, index):
