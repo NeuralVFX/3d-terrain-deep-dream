@@ -78,7 +78,7 @@ class Model(nn.Module):
         scaled_down = cv2.resize(geo_arr, (res, res), interpolation=cv2.INTER_AREA)
         scaled_down = ((scaled_down - scaled_down.mean()) / scaled_down.std()) * .2
 
-        # Rplace grid y axis with height from DEM
+        # Replace grid y axis with height from DEM
         cat_list = [vertices[:1, :, :], scaled_down.reshape([1, res, res]), vertices[2:, :, :]]
         vertices = np.concatenate(cat_list, axis=0)
         vertices = torch.FloatTensor(vertices).cuda()
