@@ -68,7 +68,7 @@ class Model(nn.Module):
     def __init__(self, geo, dem):
         super(Model, self).__init__()
         vertices, faces = nr.load_obj(f'.{geo}')
-        self.res = math.sqrt(vertices.shape[0])
+        self.res = int(math.sqrt(vertices.shape[0]))
         vertices = vertices[None, :, :]
         vertices = vertices.transpose(0, 2).view(3, self.res, self.res)
         self.faces = faces[None, :, :]
