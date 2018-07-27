@@ -56,7 +56,7 @@ python train.py --load_state output/austria_3.json --render_res 256 --train_epoc
 
 - The DEM file should be placed in the dem directory:
 
-'dem/<dem file>.img'
+`dem/<dem file>.img`
 
 ## Output Folder Structure
 
