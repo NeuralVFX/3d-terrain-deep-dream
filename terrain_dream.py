@@ -55,7 +55,7 @@ class TerrainDream:
                                                           1,
                                                           shuffle=True,
                                                           output_res=params["render_res"],
-                                                          perc=1)
+                                                          perc=params['test_perc'])
 
         print(f'Data Loader Initialized: {self.data_len} Images')
 
