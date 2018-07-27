@@ -119,7 +119,7 @@ class Render(nn.Module):
         self.renderer.light_direction = light_dir
         self.renderer.light_color_ambient = light_color_ambient
         self.renderer.eye = eye
-        
+
         return self.renderer(vertices, faces, textures)
 
 
