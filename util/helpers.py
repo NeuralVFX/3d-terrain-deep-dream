@@ -13,7 +13,13 @@ def weights_init_normal(m):
     if 'ConvTrans' == classname:
         pass
     elif 'Conv2d' in classname or 'Linear' in classname or 'ConvTrans' in classname:
-        nn.init.normal(m.weight.data, 0, .02)
+        nn.init.normal_(m.weight.data, 0, .02)
+
+
+def mft(tensor):
+    # Return mean float tensor #
+    return torch.mean(torch.FloatTensor(tensor))
+
 
 ############################################################################
 # Display Images

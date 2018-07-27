@@ -205,7 +205,7 @@ class TerrainDream:
         fake = self.transform.norm(fake_data, tensor=True)
 
         # add some noise
-        fake = (fake * .9) + (.1 * torch.FloatTensor(fake.shape).normal_(-1, 1).cuda())
+        fake = (fake * .9) + (.1 * torch.FloatTensor(fake.shape).normal_(0, .5).cuda())
 
         disc_result_fake = self.model_dict["D"](fake)
         self.loss_batch_dict['M_Loss'] = (self.l1_loss(disc_result_fake, torch.ones_like(disc_result_fake)) ** 2) * .5
@@ -232,7 +232,7 @@ class TerrainDream:
             for (real_data) in tqdm(self.train_loader):
                 real = real_data.cuda()
                 # add some noise
-                real = (real * .9) + (.1 * torch.FloatTensor(real.shape).normal_(-1, 1).cuda())
+                real = (real * .9) + (.1 * torch.FloatTensor(real.shape).normal_(0, .5).cuda())
 
                 # DREAM #
                 self.set_grad_req(d=False, g=True)
