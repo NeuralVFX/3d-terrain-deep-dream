@@ -14,6 +14,20 @@ from util import loaders as load
 from models import networks as n
 
 
+def random_eye_and_light():
+    light_dir = [(random.random() - .5) * 2,
+                  random.random(),
+                  (random.random() - .5) * 2]
+
+    light_color_directional = [(random.random() * .5) + 1.3,
+                                (random.random() * .5) + 1.3,
+                                (random.random() * .5) + 1]
+
+    eye = nr.get_points_from_angles((random.random() * .5) + 1.5,
+                                     (random.random() * 10) + 20,
+                                     random.random() * 360)
+
+    return light_dir, light_color_directional, eye
 ############################################################################
 # Train
 ############################################################################
@@ -60,18 +74,8 @@ class TerrainDream:
             self.model_dict[i].train()
         print('Networks Initialized')
 
-        self.light_dir = [(random.random() - .5) * 2,
-                          random.random(),
-                          (random.random() - .5) * 2]
 
-        self.light_color_directional = [(random.random() * .5) + 1.3,
-                                        (random.random() * .5) + 1.3,
-                                        (random.random() * .5) + 1]
-
-        self.eye = nr.get_points_from_angles((random.random() * .5) + 1.5,
-                                             (random.random() * 10) + 20,
-                                             random.random() * 360)
-        print('Eye and Light Initialized')
+        self.light_dir, self.light_color_directional, self.eye = random_eye_and_light()
 
         # setup optimizers #
         self.opt_dict["M"] = optim.RMSprop(self.model_dict["M"].parameters(), lr=params['lr_mesh'])
@@ -143,18 +147,7 @@ class TerrainDream:
         # create random lighting and camera for render, stochastic for 600 epochs, then only changes every 300
         iter_n = self.loop_iter
         if iter_n % 300 == 0 or (self.current_iter < 600 and self.current_epoch == 0):
-            self.light_dir = [(random.random() - .5) * 2,
-                              random.random(),
-                              (random.random() - .5) * 2]
-
-            self.light_color_directional = [(random.random() * .5) + 1.3,
-                                            (random.random() * .5) + 1.3,
-                                            (random.random() * .5) + 1]
-
-            self.eye = nr.get_points_from_angles((random.random() * .5) + 1.5,
-                                                 (random.random() * 10) + 20,
-                                                 random.random() * 360)
-
+            self.light_dir, self.light_color_directional, self.eye = random_eye_and_light()
         return self.light_dir, self.light_color_directional, self.eye
 
     def train_disc(self, fake, real):
@@ -187,6 +180,8 @@ class TerrainDream:
                              light_color_directional=light_color_directional)
 
         fake = self.transform.norm(fake_data, tensor=True)
+        
+        # add some noise
         fake = (fake * .9) + (.1 * torch.FloatTensor(fake.shape).normal_(-1, 1).cuda())
 
         disc_result_fake = self.model_dict["D"](fake)
@@ -214,6 +209,7 @@ class TerrainDream:
             # Run progress bar for length of dataset
             for (real_data) in tqdm(self.train_loader):
                 real = real_data.cuda()
+                # add some noise
                 real = (real * .9) + (.1 * torch.FloatTensor(real.shape).normal_(-1, 1).cuda())
 
                 # DREAM #
