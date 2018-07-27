@@ -177,7 +177,7 @@ class TerrainDream:
 
         light_dir, light_color_directional, eye = self.get_eye_and_light()
 
-        fake_data = n.render(vert_prep,
+        fake_data = self.render(vert_prep,
                              face,
                              tex_prep,
                              eye,
