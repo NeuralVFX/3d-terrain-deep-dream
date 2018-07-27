@@ -28,6 +28,8 @@ def random_eye_and_light():
                                      random.random() * 360)
 
     return light_dir, light_color_directional, eye
+
+
 ############################################################################
 # Train
 ############################################################################
@@ -52,18 +54,20 @@ class TerrainDream:
         self.train_loader, self.data_len = load.data_load(self.transform,
                                                           1,
                                                           shuffle=True,
-                                                          output_res=256,
+                                                          output_res=params["render_res"],
                                                           perc=1)
 
         print(f'Data Loader Initialized: {self.data_len} Images')
 
-        self.model_dict["M"] = n.Model(params["obj"], params["dem"], 512)
+        self.model_dict["M"] = n.Model(params["obj_file"],
+                                       params["dem_file"])
+
         self.model_dict["D"] = n.Discriminator(channels=3,
                                                filts=params["disc_filters"],
                                                kernel_size=4,
                                                layers=params["disc_layers"])
         self.v2t = n.Vert2Tri()
-        self.render = n.Render(res=256)
+        self.render = n.Render(res=params["render_res"])
 
         self.v2t.cuda()
         self.render.cuda()
@@ -73,7 +77,6 @@ class TerrainDream:
             self.model_dict[i].cuda()
             self.model_dict[i].train()
         print('Networks Initialized')
-
 
         self.light_dir, self.light_color_directional, self.eye = random_eye_and_light()
 
@@ -168,7 +171,8 @@ class TerrainDream:
         tex, vert, face = self.model_dict["M"]
         tex_a = self.v2t(tex.unsqueeze(0))
         tex_prep = (F.tanh(tex_a).permute(0, 2, 3, 1).contiguous().view(1, face.shape[1], 2, 2, 2, 3) * .5) + .5
-        vert_prep = vert.view(3, 256, 256).transpose(0, 2).contiguous().view(1, -1, 3)
+        vert_prep = vert.view(3, self.model_dict["M"].mesh_res,
+                              self.model_dict["M"].mesh_res).transpose(0, 2).contiguous().view(1, -1, 3)
 
         light_dir, light_color_directional, eye = self.get_eye_and_light()
 
@@ -180,7 +184,7 @@ class TerrainDream:
                              light_color_directional=light_color_directional)
 
         fake = self.transform.norm(fake_data, tensor=True)
-        
+
         # add some noise
         fake = (fake * .9) + (.1 * torch.FloatTensor(fake.shape).normal_(-1, 1).cuda())
 
@@ -206,7 +210,6 @@ class TerrainDream:
             self.loop_iter = 0
             epoch_start_time = time.time()
 
-            # Run progress bar for length of dataset
             for (real_data) in tqdm(self.train_loader):
                 real = real_data.cuda()
                 # add some noise

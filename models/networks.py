@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 import torch.nn as nn
 import neural_renderer as nr
-
+import math
 
 ############################################################################
 # Re-usable blocks
@@ -65,27 +65,28 @@ class ConvTrans(nn.Module):
 
 class Model(nn.Module):
     # Loaded for DEM file, and storage for out textures
-    def __init__(self, geo, dem, res):
+    def __init__(self, geo, dem):
         super(Model, self).__init__()
         vertices, faces = nr.load_obj(geo)
+        self.res = math.sqrt(vertices.shape[0])
         vertices = vertices[None, :, :]
-        vertices = vertices.transpose(0, 2).view(3, res, res)
+        vertices = vertices.transpose(0, 2).view(3, self.res, self.res)
         self.faces = faces[None, :, :]
 
         # Load_dem
         geo = gdal.Open(dem)
         geo_arr = geo.ReadAsArray()
-        scaled_down = cv2.resize(geo_arr, (res, res), interpolation=cv2.INTER_AREA)
+        scaled_down = cv2.resize(geo_arr, (self.res, self.res), interpolation=cv2.INTER_AREA)
         scaled_down = ((scaled_down - scaled_down.mean()) / scaled_down.std()) * .2
 
         # Replace grid y axis with height from DEM
-        cat_list = [vertices[:1, :, :], scaled_down.reshape([1, res, res]), vertices[2:, :, :]]
+        cat_list = [vertices[:1, :, :], scaled_down.reshape([1, self.res, self.res]), vertices[2:, :, :]]
         vertices = np.concatenate(cat_list, axis=0)
         vertices = torch.FloatTensor(vertices).cuda()
         self.vertices = vertices
 
         # Initialize random textures
-        blurry_noise = gaussian_filter(np.random.normal(0, .5, (3, res, res)), sigma=3)
+        blurry_noise = gaussian_filter(np.random.normal(0, .5, (3, self.res, self.res)), sigma=3)
         textures = torch.FloatTensor(blurry_noise).cuda()
         self.textures = nn.Parameter(textures)
 
