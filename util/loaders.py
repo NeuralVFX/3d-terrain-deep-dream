@@ -168,8 +168,7 @@ class MountainDataset(Dataset):
         subset_ids = ids[:split_index]
         return subset_ids
 
-    def __init__(self, transform, output_res=256, train=True, perc=1):
-        self.train = train
+    def __init__(self, transform, output_res=256, perc=1):
         self.transform = transform
         self.path_list_a = glob.glob('/data/geoPose3K_final_publish/*/cyl/photo_crop.*')
         self.path_list_b = glob.glob('/data/geoPose3K_final_publish/*/cyl/labels_crop.*')
@@ -205,8 +204,8 @@ class MountainDataset(Dataset):
         return self.ids.size
 
 
-def data_load(transform, batch_size, shuffle=False, output_res=128, train=True, perc=1):
+def data_load(transform, batch_size, shuffle=False, output_res=128, perc=1):
     # Wrapper for loader
-    dataset = MountainDataset(transform, output_res=output_res, train=train, perc=perc)
+    dataset = MountainDataset(transform, output_res=output_res, perc=perc)
     datalen = dataset.__len__()
     return torch.utils.data.DataLoader(dataset, batch_size=batch_size, num_workers=1, shuffle=shuffle), datalen
