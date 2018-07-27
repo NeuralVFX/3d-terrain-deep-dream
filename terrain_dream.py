@@ -47,7 +47,7 @@ class TerrainDream:
         'disc_filters': 512,
         'lr_disc': .001,
         'lr_mesh': .001,
-        'test_perc': .01,
+        'data_perc': .01,
         'train_epoch': 200,
         'disc_layers': 4,
         'render_res':256,
@@ -74,7 +74,7 @@ class TerrainDream:
                                                           1,
                                                           shuffle=True,
                                                           output_res=params["render_res"],
-                                                          perc=params['test_perc'],
+                                                          perc=params['data_perc'],
                                                           workers=params['loader_workers'])
 
         print(f'Data Loader Initialized: {self.data_len} Images')

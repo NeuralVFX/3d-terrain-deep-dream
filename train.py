@@ -17,7 +17,7 @@ parser.add_argument('--render_res', nargs='?', default=256, type=int)
 parser.add_argument('--train_epoch', nargs='?', default=6, type=int)
 parser.add_argument('--save_every', nargs='?', default=1, type=int)
 parser.add_argument('--loader_workers', nargs='?', default=4, type=int)
-parser.add_argument('--test_perc', nargs='?', default=1, type=float)
+parser.add_argument('--data_perc', nargs='?', default=1, type=float)
 parser.add_argument('--save_root', nargs='?', default='austria', type=str)
 parser.add_argument('--load_state', nargs='?', type=str)
 
