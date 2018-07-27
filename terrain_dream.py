@@ -37,7 +37,7 @@ def random_eye_and_light():
 class TerrainDream:
     """
     Example usage if not using command line:
-    
+
     %matplotlib inline # use if in Jupyter Notebook
 
     params = {
