@@ -7,8 +7,6 @@ from tqdm import tqdm
 from torch.utils.data import *
 import neural_renderer as nr
 import random
-import matplotlib
-matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
 from util import helpers as helper
@@ -39,7 +37,24 @@ def random_eye_and_light():
 class TerrainDream:
     """
     Example usage if not using command line:
+    %matplotlib inline
 
+    params = {
+        'obj_file':'/geo/grid_256.obj',
+        'dem_file':'/data/USGS/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img',
+        'disc_layers': 4,
+        'disc_filters': 512,
+        'lr_disc': .001,
+        'lr_mesh': .001,
+        'test_perc': .01,
+        'train_epoch': 200,
+        'disc_layers': 4,
+        'render_res':256,
+        'save_root': 'austria',
+        'save_every': 1}
+
+    dream = TerrainDream(params)
+    dream.train()
 
     """
 
