@@ -1,4 +1,3 @@
-import random
 import time
 import torch
 import torch.optim as optim
@@ -6,7 +5,6 @@ import torch.nn.functional as F
 import torch.nn as nn
 from tqdm import tqdm
 from torch.utils.data import *
-import neural_renderer as nr
 import matplotlib.pyplot as plt
 
 plt.switch_backend('agg')
@@ -16,20 +14,6 @@ from util import loaders as load
 from models import networks as n
 
 
-def random_eye_and_light():
-    light_dir = [(random.random() - .5) * 2,
-                 random.random(),
-                 (random.random() - .5) * 2]
-
-    light_color_directional = [(random.random() * .5) + 1.3,
-                               (random.random() * .5) + 1.3,
-                               (random.random() * .5) + 1]
-
-    eye = nr.get_points_from_angles((random.random() * .5) + 1.5,
-                                    (random.random() * 10) + 20,
-                                    random.random() * 360)
-
-    return light_dir, light_color_directional, eye
 
 
 ############################################################################
@@ -77,7 +61,9 @@ class TerrainDream:
                                                           shuffle=True,
                                                           output_res=params["render_res"],
                                                           perc=params['data_perc'],
-                                                          workers=params['loader_workers'])
+                                                          workers=params['loader_workers'],
+                                                          generic=params['use_generic_dataset'],
+                                                          path_a=params['generic_dataset'])
 
         print(f'Data Loader Initialized: {self.data_len} Images')
 
@@ -102,10 +88,20 @@ class TerrainDream:
 
         self.l1_loss = nn.L1Loss()
 
-        self.light_dir, self.light_color_directional, self.eye = random_eye_and_light()
+        self.dir_lgt_dir, self.dir_lgt_col, self.eye = helper.random_eye_and_light()
 
         # setup optimizers #
-        self.opt_dict["M"] = optim.RMSprop(self.model_dict["M"].parameters(), lr=params['lr_mesh'])
+        opt_params = [{'params': self.model_dict["M"].textures, 'lr': params["lr_tex"]},
+        {'params':self.model_dict["M"].vertices,'lr': params["lr_mesh"]}]
+        self.opt_dict["M"] = optim.RMSprop(opt_params)
+
+        print(f'Optimize Mesh:{params["opt_mesh"]}   Optimize Tex:{params["opt_tex"]}')
+        if not params["opt_tex"]:
+            self.model_dict["M"].textures.requires_grad = False
+        if not params["opt_mesh"]:
+            self.model_dict["M"].vertices.requires_grad = False
+
+
         self.opt_dict["D"] = optim.RMSprop(self.model_dict["D"].parameters(), lr=params['lr_disc'])
         print('Optimizers Initialized')
 
@@ -174,8 +170,8 @@ class TerrainDream:
         # create random lighting and camera for render, stochastic for 600 epochs, then only changes every 300
         iter_n = self.loop_iter
         if iter_n % 300 == 0 or (self.current_iter < 600 and self.current_epoch == 0):
-            self.light_dir, self.light_color_directional, self.eye = random_eye_and_light()
-        return self.light_dir, self.light_color_directional, self.eye
+            self.dir_lgt_dir, self.dir_lgt_col, self.eye = helper.random_eye_and_light()
+        return self.dir_lgt_dir, self.dir_lgt_col, self.eye
 
     def train_disc(self, fake, real):
         # train discriminator on fake and real image
@@ -247,19 +243,19 @@ class TerrainDream:
                 self.set_grad_req(d=True, g=False)
                 self.train_disc(fake, real)
 
+                if self.loop_iter % params['save_img_every'] == 0:
+                    helper.show_test(real,
+                                     fake,
+                                     self.model_dict['M'].textures.unsqueeze(0),
+                                     self.transform,
+                                     save=f'output/{params["save_root"]}_{self.loop_iter}.jpg')
+
                 # append all losses in loss dict #
                 [self.loss_epoch_dict[loss].append(self.loss_batch_dict[loss].data.item()) for loss in self.losses]
                 self.loop_iter += 1
                 self.current_iter += 1
 
             self.current_epoch += 1
-
-            if self.current_epoch % params['save_every'] == 0:
-                helper.show_test(real,
-                                 fake,
-                                 self.model_dict['M'].textures.unsqueeze(0),
-                                 self.transform,
-                                 save=f'output/{params["save_root"]}_{self.current_epoch}.jpg')
 
                 save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
                 print(save_str)

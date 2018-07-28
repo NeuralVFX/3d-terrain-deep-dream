@@ -1,7 +1,8 @@
+import random
 import torch.nn as nn
 import torch
 import matplotlib.pyplot as plt
-
+import neural_renderer as nr
 
 plt.switch_backend('agg')
 
@@ -22,6 +23,22 @@ def weights_init_normal(m):
 def mft(tensor):
     # Return mean float tensor #
     return torch.mean(torch.FloatTensor(tensor))
+
+
+def random_eye_and_light():
+    light_dir = [(random.random() - .5) * 2,
+                 random.random(),
+                 (random.random() - .5) * 2]
+
+    light_color_directional = [(random.random() * .5) + 1,
+                               (random.random() * .5) + 1,
+                               (random.random() * .5) + .75]
+
+    eye = nr.get_points_from_angles((random.random() * .8) + 1.7,
+                                    (random.random() * 15) + 20,
+                                    random.random() * 360)
+
+    return light_dir, light_color_directional, eye
 
 
 ############################################################################

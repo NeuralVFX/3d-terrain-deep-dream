@@ -66,7 +66,7 @@ class ConvTrans(nn.Module):
 
 class Model(nn.Module):
     # Loaded for DEM file, and storage for out textures
-    def __init__(self, geo, dem):
+    def __init__(self, geo, dem, opt_tex = True, opt):
         super(Model, self).__init__()
         print(f'Loading OBJ: {geo}')
         vertices, faces = nr.load_obj(f'./{geo}')
@@ -86,10 +86,10 @@ class Model(nn.Module):
         cat_list = [vertices[:1, :, :], scaled_down.reshape([1, self.res, self.res]), vertices[2:, :, :]]
         vertices = np.concatenate(cat_list, axis=0)
         vertices = torch.FloatTensor(vertices).cuda()
-        self.vertices = vertices
+        self.vertices = nn.Parameter(vertices)
 
         # Initialize random textures
-        blurry_noise = gaussian_filter(np.random.normal(0, .5, (3, self.res, self.res)), sigma=1)
+        blurry_noise = gaussian_filter(np.random.normal(0, 1, (3, self.res, self.res)), sigma=3)
         textures = torch.FloatTensor(blurry_noise).cuda()
         self.textures = nn.Parameter(textures)
 

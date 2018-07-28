@@ -153,7 +153,7 @@ class TransformCV(object):
 
 
 class MountainDataset(Dataset):
-    # Load Image and Apply Augmentation
+    # Load Images from GeoPose3k Dataset and Apply Augmentation
 
     def get_subset(self, perc, seed=5):
         # use to only load a percentage of the training set
@@ -202,8 +202,56 @@ class MountainDataset(Dataset):
         return self.ids.size
 
 
-def data_load(transform, batch_size, shuffle=False, output_res=128, perc=1, workers=1):
+class GenericDataset(Dataset):
+    # Load Images from User Supplied Path and Apply Augmentation
+
+    def get_subset(self, perc, seed=5):
+        # use to only load a percentage of the training set
+        total_count = len(self.path_list_a)
+        ids = list(range(total_count))
+
+        # seed this consistently even if model restarted
+        np.random.seed(seed)
+
+        ids = np.random.permutation(ids)
+        split_index = int(total_count * perc)
+        subset_ids = ids[:split_index]
+        return subset_ids
+
+    def __init__(self, path_a,transform, output_res=256, perc=1):
+        self.transform = transform
+        self.path_list_a = glob.glob(f'/data/{path_a}/*.*')
+        self.output_res = output_res
+        self.data_transforms = transforms.Compose([ResizeCV(output_res), FlipCV(p_x=.5, p_y=0),
+                                                   TransformCV(rot=5, height=.1, width=.1, zoom=.2)])
+        self.ids = self.get_subset(perc)
+
+    def transform_set(self, image_a):
+        # Apply augmentation
+        trans_dict = {'image': image_a}
+        trans_dict = self.data_transforms(trans_dict)
+        return np.rollaxis(self.transform.norm(trans_dict['image']), 2)
+
+    def __getitem__(self, index):
+        # lookup id from permuted list, apply transform, return tensor
+        lookup_id = self.ids[index]
+        image_path_a = self.path_list_a[lookup_id]
+        image_a = cv2_open(image_path_a)
+
+        image = self.transform_set(image)
+        tensor = torch.FloatTensor(image)
+        return tensor
+
+    def __len__(self):
+        return self.ids.size
+
+
+def data_load(transform, batch_size, shuffle=False, output_res=128, perc=1, workers=1, generic = False, path_a = False):
     # Wrapper for loader
-    dataset = MountainDataset(transform, output_res=output_res, perc=perc)
+    if generic:
+        dataset = MountainDataset(path_a, transform, output_res=output_res, perc=perc)
+    else:
+        dataset = MountainDataset(transform, output_res=output_res, perc=perc)
+
     datalen = dataset.__len__()
     return torch.utils.data.DataLoader(dataset, batch_size=batch_size, num_workers=workers, shuffle=shuffle), datalen
