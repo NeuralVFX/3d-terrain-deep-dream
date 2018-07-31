@@ -108,22 +108,9 @@ class Render(nn.Module):
         renderer.light_intensity_directional = .9
         renderer.light_intensity_ambient = .75
         self.renderer = renderer
+        self.rotation_array = self.generate_rotation_array(self,1)
 
-    def forward(self,
-                vertices,
-                faces,
-                textures,
-                eye,
-                light_dir=[.5, .5, .5],
-                light_color_directional=[.8, 1, .7],
-                light_color_ambient=[1, 1.2, 1.2],
-                batch_size = 8):
-
-        self.renderer.light_color_directional = light_color_directional
-        self.renderer.light_direction = light_dir
-        self.renderer.light_color_ambient = light_color_ambient
-        self.renderer.eye = eye
-
+    def generate_rotation_array(self,batch_size):
         rot_list = []
         for a in range(batch_size):
             rotation_matrix = cv2.getRotationMatrix2D((0,0),(a / batch_size) * 360,1)
@@ -135,8 +122,28 @@ class Render(nn.Module):
 
         batch_rot = torch.FloatTensor(np.array(rot_list)).cuda()
         batch_rot.requires_grad =False
+        return batch_rot
 
-        transformerd_verts = torch.matmul(vertices.expand(batch_size, -1, -1),batch_rot)
+
+    def forward(self,
+                vertices,
+                faces,
+                textures,
+                eye,
+                light_dir=[.5, .5, .5],
+                light_color_directional=[.8, 1, .7],
+                light_color_ambient=[1, 1.2, 1.2],):
+        
+        batch_size = vertices.shape[0]
+        if vertices.shape[0] != self.rotation_array:
+            self.rotation_array = self.generate_rotation_array(batch_size)
+
+        self.renderer.light_color_directional = light_color_directional
+        self.renderer.light_direction = light_dir
+        self.renderer.light_color_ambient = light_color_ambient
+        self.renderer.eye = eye
+
+        transformerd_verts = torch.matmul(vertices.expand(batch_size, -1, -1),self.rotation_array )
         return self.renderer(transformerd_verts,
                              faces.expand(batch_size,-1,-1),
                              textures.expand(batch_size,-1,-1,-1,-1,-1))
