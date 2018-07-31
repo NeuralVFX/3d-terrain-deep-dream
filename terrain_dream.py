@@ -257,8 +257,8 @@ class TerrainDream:
 
             self.current_epoch += 1
 
-                save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
-                print(save_str)
+            save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
+            print(save_str)
 
             epoch_end_time = time.time()
             per_epoch_ptime = epoch_end_time - epoch_start_time
