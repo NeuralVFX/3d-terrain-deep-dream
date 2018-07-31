@@ -135,10 +135,7 @@ class Discriminator(nn.Module):
 
         # Build up discriminator backwards based on final filter count
         for a in range(layers):
-            if a == layers - 1:
-                operations += [ConvTrans(ic=int(filts // 2), oc=filts, kernel_size=kernel_size, block_type='down')]
-            else:
-                operations += [ConvTrans(ic=int(filts // 2), oc=filts, kernel_size=kernel_size, block_type='down')]
+            operations += [ConvTrans(ic=int(filts // 2), oc=filts, kernel_size=kernel_size, block_type='down')]
             filts = int(filts // 2)
 
         operations.reverse()
