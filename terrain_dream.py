@@ -163,9 +163,12 @@ class TerrainDream:
         # Easily enable and disable gradient storage per model
         for par in self.model_dict["D"].parameters():
             par.requires_grad = d
-        for par in self.model_dict["M"].parameters():
-            par.requires_grad = g
-
+        g_tex = self.params["opt_tex"] and g
+        self.model_dict["M"].textures.requires_grad = g_tex
+        g_mesh = self.params["opt_mesh"] and g
+        self.model_dict["M"].vertices.requires_grad = g_mesh
+        print ('grad_tex',g_tex,'grad_mesh',g_mesh)
+        
     def get_eye_and_light(self):
         # create random lighting and camera for render, stochastic for 600 epochs, then only changes every 300
         iter_n = self.loop_iter
