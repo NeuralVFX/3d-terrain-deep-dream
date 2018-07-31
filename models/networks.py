@@ -134,7 +134,7 @@ class Render(nn.Module):
             rot_list.append(np.copy(rotation_matrix))
 
         batch_rot = torch.FloatTensor(np.array(rot_list)).cuda()
-        torch.no_grad(batch_rot)
+        batch_rot.requires_grad =False
 
         transformerd_verts = torch.matmul(vertices.expand(batch_size, -1, -1),batch_rot)
         return self.renderer(transformerd_verts,
