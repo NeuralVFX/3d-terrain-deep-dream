@@ -132,10 +132,10 @@ class Render(nn.Module):
                 eye,
                 light_dir=[.5, .5, .5],
                 light_color_directional=[.8, 1, .7],
-                light_color_ambient=[1, 1.2, 1.2],):
+                light_color_ambient=[1, 1.2, 1.2],
+                batch_size = 1):
 
-        batch_size = vertices.shape[0]
-        if vertices.shape[0] != self.rotation_array.shape[0]:
+        if batch_size != self.rotation_array.shape[0]:
             self.rotation_array = self.generate_rotation_array(batch_size)
 
         self.renderer.light_color_directional = light_color_directional
