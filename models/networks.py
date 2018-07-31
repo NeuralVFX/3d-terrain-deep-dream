@@ -124,25 +124,29 @@ class Render(nn.Module):
         self.renderer.light_color_ambient = light_color_ambient
         self.renderer.eye = eye
 
-        print (vertices.shape,faces.shape,textures.shape)
 
+         ## rotation_90 = cv2.getRotationMatrix2D((0, 0), 90, 1)
+         #rotation_90 = np.array([rotation_90[0],
+         #                       rotation_90[1],
+         #                       [0, 0, 1]])
+        rotation_90 = np.array([[0, 0, -1],
+                                [0, 1, 0],
+                                [1, 0, 0]])
         rot_list = []
         for a in range(batch_size):
             print ((a/batch_size)*360)
-            rotation_matrix = cv2.getRotationMatrix2D((0,
-                                                       0),
-                                                      (a / batch_size) * 360,
-                                                      1)
+            rotation_matrix = cv2.getRotationMatrix2D((0,0),(a / batch_size) * 360,1)
 
             rotation_matrix = np.array([rotation_matrix[0],
                                         rotation_matrix[1],
                                         [0, 0, 1]])
+
+            rotation_matrix = np.matmul(rotation_matrix,rotation_90)
             rot_list.append(np.copy(rotation_matrix))
 
         batch_rot = torch.FloatTensor(np.array(rot_list))
 
         transformerd_verts = torch.matmul(vertices.expand(batch_size, -1, -1),batch_rot.cuda())
-        #torch.matmul(vertices.expand(2, -1, 3), batch_rot.cuda())*
         return self.renderer(transformerd_verts,
                              faces.expand(batch_size,-1,-1),
                              textures.expand(batch_size,-1,-1,-1,-1,-1))
