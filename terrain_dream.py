@@ -167,8 +167,7 @@ class TerrainDream:
         self.model_dict["M"].textures.requires_grad = g_tex
         g_mesh = self.params["opt_mesh"] and g
         self.model_dict["M"].vertices.requires_grad = g_mesh
-        print ('grad_tex',g_tex,'grad_mesh',g_mesh)
-        
+
     def get_eye_and_light(self):
         # create random lighting and camera for render, stochastic for 600 epochs, then only changes every 300
         iter_n = self.loop_iter
