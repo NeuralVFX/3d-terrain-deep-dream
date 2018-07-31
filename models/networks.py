@@ -129,7 +129,7 @@ class Render(nn.Module):
             print ((a/batch_size)*360)
             rotation_matrix = cv2.getRotationMatrix2D((0,0),(a / batch_size) * 360,1)
 
-            rotation_matrix = np.array([rotation_matrix[0][0],0,rotation_matrix[0][2],
+            rotation_matrix = np.array([[rotation_matrix[0][0],0,rotation_matrix[0][2]],
                                         [0,1,0],
                                         [rotation_matrix[1][0], 0, rotation_matrix[1][2]]])
 
