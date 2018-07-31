@@ -140,8 +140,8 @@ class Render(nn.Module):
 
         batch_rot = torch.FloatTensor(np.array(rot_list))
 
-        transformerd_verts = vertices.expand(batch_size, -1, -1)*batch_rot
-
+        transformerd_verts = torch.matmul(vertices.expand(batch_size, -1, -1),batch_rot.cuda())
+        #torch.matmul(vertices.expand(2, -1, 3), batch_rot.cuda())*
         return self.renderer(transformerd_verts,
                              faces.expand(batch_size,-1,-1),
                              textures.expand(batch_size,-1,-1,-1,-1,-1))
