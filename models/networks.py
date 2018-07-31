@@ -128,6 +128,7 @@ class Render(nn.Module):
 
         rot_list = []
         for a in range(batch_size):
+            print (360*(a+1/batch_size))
             rotation_matrix = cv2.getRotationMatrix2D((0,
                                                        0),
                                                       360*(a+1/batch_size),
@@ -136,7 +137,7 @@ class Render(nn.Module):
             rotation_matrix = np.array([rotation_matrix[0],
                                         rotation_matrix[1],
                                         [0, 0, 1]])
-            rot_list.append(rotation_matrix)
+            rot_list.append(np.copy(rotation_matrix))
 
         batch_rot = torch.FloatTensor(np.array(rot_list))
 
