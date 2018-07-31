@@ -246,12 +246,7 @@ class TerrainDream:
                 self.set_grad_req(d=True, g=False)
                 self.train_disc(fake, real)
 
-                if self.loop_iter % params['save_img_every'] == 0:
-                    helper.show_test(real,
-                                     fake,
-                                     self.model_dict['M'].textures.unsqueeze(0),
-                                     self.transform,
-                                     save=f'output/{params["save_root"]}_{self.loop_iter}.jpg')
+
 
                 # append all losses in loss dict #
                 [self.loss_epoch_dict[loss].append(self.loss_batch_dict[loss].data.item()) for loss in self.losses]
@@ -260,6 +255,12 @@ class TerrainDream:
 
             self.current_epoch += 1
 
+            if self.loop_iter % params['save_img_every'] == 0:
+                helper.show_test(real,
+                                 fake,
+                                 self.model_dict['M'].textures.unsqueeze(0),
+                                 self.transform,
+                                 save=f'output/{params["save_root"]}_{self.current_epoch}.jpg')
             save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
             print(save_str)
 
