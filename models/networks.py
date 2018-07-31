@@ -66,7 +66,7 @@ class ConvTrans(nn.Module):
 
 class Model(nn.Module):
     # Loaded for DEM file, and storage for out textures
-    def __init__(self, geo, dem, opt_tex = True, opt):
+    def __init__(self, geo, dem):
         super(Model, self).__init__()
         print(f'Loading OBJ: {geo}')
         vertices, faces = nr.load_obj(f'./{geo}')
