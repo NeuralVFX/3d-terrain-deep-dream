@@ -127,7 +127,7 @@ class Render(nn.Module):
         print (vertices.shape,faces.shape,textures.shape)
 
         rot_list = []
-        for a in range(batch_size)
+        for a in range(batch_size):
             rotation_matrix = cv2.getRotationMatrix2D((0,
                                                        0),
                                                       360*(a+1/batch_size),
