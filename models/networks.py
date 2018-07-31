@@ -108,7 +108,7 @@ class Render(nn.Module):
         renderer.light_intensity_directional = .9
         renderer.light_intensity_ambient = .75
         self.renderer = renderer
-        self.rotation_array = self.generate_rotation_array(self,1)
+        self.rotation_array = self.generate_rotation_array(1)
 
     def generate_rotation_array(self,batch_size):
         rot_list = []
@@ -133,7 +133,7 @@ class Render(nn.Module):
                 light_dir=[.5, .5, .5],
                 light_color_directional=[.8, 1, .7],
                 light_color_ambient=[1, 1.2, 1.2],):
-        
+
         batch_size = vertices.shape[0]
         if vertices.shape[0] != self.rotation_array:
             self.rotation_array = self.generate_rotation_array(batch_size)
