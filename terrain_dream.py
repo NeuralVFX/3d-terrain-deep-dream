@@ -57,7 +57,7 @@ class TerrainDream:
         self.transform = load.NormDenorm([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 
         self.train_loader, self.data_len = load.data_load(self.transform,
-                                                          8,
+                                                          params["batch_size"],
                                                           shuffle=True,
                                                           output_res=params["render_res"],
                                                           perc=params['data_perc'],
@@ -184,7 +184,7 @@ class TerrainDream:
         self.loss_batch_dict['D_Loss'].backward()
         self.opt_dict["D"].step()
 
-    def dream_on_mesh(self):
+    def dream_on_mesh(self,batch_size = 1):
         # create render, and use discriminator to dream, backprop to the mesh#
         self.opt_dict["M"].zero_grad()
 
@@ -202,7 +202,7 @@ class TerrainDream:
                                 eye,
                                 light_dir=light_dir,
                                 light_color_directional=light_color_directional,
-                                batch_size = 8)
+                                batch_size = batch_size)
 
         fake = self.transform.norm(fake_data, tensor=True)
 
@@ -238,7 +238,7 @@ class TerrainDream:
 
                 # DREAM #
                 self.set_grad_req(d=False, g=True)
-                fake = self.dream_on_mesh()
+                fake = self.dream_on_mesh(batch_size = real.shape[0])
 
                 # TRAIN DISC #
                 self.set_grad_req(d=True, g=False)

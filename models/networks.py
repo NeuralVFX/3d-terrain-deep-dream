@@ -126,7 +126,23 @@ class Render(nn.Module):
 
         print (vertices.shape,faces.shape,textures.shape)
 
-        return self.renderer(vertices.expand(batch_size,-1,-1),
+        rot_list = []
+        for a in range(batch_size)
+            rotation_matrix = cv2.getRotationMatrix2D((0,
+                                                       0),
+                                                      360*(a+1/batch_size),
+                                                      1)
+
+            rotation_matrix = np.array([rotation_matrix[0],
+                                        rotation_matrix[1],
+                                        [0, 0, 1]])
+            rot_list.append(rotation_matrix)
+
+        batch_rot = torch.FloatTensor(np.array(rot_list))
+
+        transformerd_verts = vertices.expand(batch_size, -1, -1)*batch_rot
+
+        return self.renderer(transformerd_verts,
                              faces.expand(batch_size,-1,-1),
                              textures.expand(batch_size,-1,-1,-1,-1,-1))
 
