@@ -125,13 +125,13 @@ class Render(nn.Module):
         self.renderer.eye = eye
 
 
-         ## rotation_90 = cv2.getRotationMatrix2D((0, 0), 90, 1)
-         #rotation_90 = np.array([rotation_90[0],
-         #                       rotation_90[1],
-         #                       [0, 0, 1]])
-        rotation_90 = np.array([[0, 0, -1],
-                                [0, 1, 0],
-                                [1, 0, 0]])
+        rotation_90 = cv2.getRotationMatrix2D((0, 0), 90, 1)
+        rotation_90 = np.array([rotation_90[0],
+                                rotation_90[1],
+                                [0, 0, 1]])
+        #rotation_90 = np.array([[0, 0, -1],
+        #                       [0, 1, 0],
+        #                        [1, 0, 0]])
         rot_list = []
         for a in range(batch_size):
             print ((a/batch_size)*360)
