@@ -57,7 +57,7 @@ class TerrainDream:
         self.transform = load.NormDenorm([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 
         self.train_loader, self.data_len = load.data_load(self.transform,
-                                                          1,
+                                                          8,
                                                           shuffle=True,
                                                           output_res=params["render_res"],
                                                           perc=params['data_perc'],
@@ -201,7 +201,8 @@ class TerrainDream:
                                 tex_prep,
                                 eye,
                                 light_dir=light_dir,
-                                light_color_directional=light_color_directional)
+                                light_color_directional=light_color_directional,
+                                batch_size = 8)
 
         fake = self.transform.norm(fake_data, tensor=True)
 

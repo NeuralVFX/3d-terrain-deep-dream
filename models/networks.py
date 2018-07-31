@@ -116,7 +116,8 @@ class Render(nn.Module):
                 eye,
                 light_dir=[.5, .5, .5],
                 light_color_directional=[.8, 1, .7],
-                light_color_ambient=[1, 1.2, 1.2]):
+                light_color_ambient=[1, 1.2, 1.2],
+                batch_size = 8):
 
         self.renderer.light_color_directional = light_color_directional
         self.renderer.light_direction = light_dir
@@ -125,7 +126,9 @@ class Render(nn.Module):
 
         print (vertices.shape,faces.shape,textures.shape)
 
-        return self.renderer(vertices.expand(8,-1,-1), faces.expand(8,-1,-1), textures.expand(8,-1,-1,-1,-1,-1))
+        return self.renderer(vertices.expand(batch_size,-1,-1),
+                             faces.expand(batch_size,-1,-1),
+                             textures.expand(batch_size,-1,-1,-1,-1,-1))
 
 
 class Discriminator(nn.Module):
