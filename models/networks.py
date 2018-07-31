@@ -125,7 +125,7 @@ class Render(nn.Module):
 
         print (vertices.shape,faces.shape,textures.shape)
 
-        return self.renderer(vertices, faces, textures)
+        return self.renderer(vertices.expand(8,-1,-1), faces.expand(8,-1,-1), textures.expand(8,-1,-1,-1,-1,-1))
 
 
 class Discriminator(nn.Module):
