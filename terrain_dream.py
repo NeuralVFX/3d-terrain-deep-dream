@@ -201,8 +201,7 @@ class TerrainDream:
                                 tex_prep,
                                 eye,
                                 light_dir=light_dir,
-                                light_color_directional=light_color_directional,
-                                batch_size = batch_size)
+                                light_color_directional=light_color_directional)
 
         fake = self.transform.norm(fake_data, tensor=True)
 
