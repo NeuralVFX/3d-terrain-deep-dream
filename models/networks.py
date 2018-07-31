@@ -141,7 +141,7 @@ class Render(nn.Module):
                                         rotation_matrix[1],
                                         [0, 0, 1]])
 
-            rotation_matrix = np.matmul(rotation_matrix,rotation_90)
+            rotation_matrix = np.matmul(rotation_90,rotation_matrix,)
             rot_list.append(np.copy(rotation_matrix))
 
         batch_rot = torch.FloatTensor(np.array(rot_list))
