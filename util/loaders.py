@@ -236,7 +236,7 @@ class GenericDataset(Dataset):
         # lookup id from permuted list, apply transform, return tensor
         lookup_id = self.ids[index]
         image_path_a = self.path_list_a[lookup_id]
-        image_a = cv2_open(image_path_a)
+        image = cv2_open(image_path_a)
 
         image = self.transform_set(image)
         tensor = torch.FloatTensor(image)
