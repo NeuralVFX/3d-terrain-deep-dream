@@ -251,7 +251,7 @@ def data_load(transform, batch_size, shuffle=False, output_res=128, perc=1, work
     if generic:
         dataset = GenericDataset(path_a, transform, output_res=output_res, perc=perc)
     else:
-        dataset = MountainDataset(path,transform, output_res=output_res, perc=perc)
+        dataset = MountainDataset(path_a,transform, output_res=output_res, perc=perc)
 
     datalen = dataset.__len__()
     return torch.utils.data.DataLoader(dataset, batch_size=batch_size, num_workers=workers, shuffle=shuffle), datalen

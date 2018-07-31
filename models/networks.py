@@ -124,7 +124,7 @@ class Render(nn.Module):
         self.renderer.eye = eye
 
         print (vertices.shape,faces.shape,textures.shape)
-        
+
         return self.renderer(vertices, faces, textures)
 
 
