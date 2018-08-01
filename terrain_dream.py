@@ -122,6 +122,9 @@ class TerrainDream:
             self.loss_epoch_dict[loss] = []
             self.loss_batch_dict[loss] = []
 
+        print(f'Camera Pausing: {params["camera_pausing"]}')
+
+
     def load_state(self, filepath):
         # Load previously saved sate from disk, including models, optimizers and history
         state = torch.load(filepath)
