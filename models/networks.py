@@ -101,7 +101,7 @@ class Model(nn.Module):
         textures = torch.FloatTensor(blurry_noise).cuda()
         textures = v2t(textures.unsqueeze(0))
 
-        self.textures = nn.Parameter(textures.permute(0, 2, 3, 1).contiguous().view(1, self.face.shape[1], 2, 2, 2, 3))
+        self.textures = nn.Parameter(textures.permute(0, 2, 3, 1).contiguous().view(1, self.faces.shape[1], 2, 2, 2, 3))
 
     def forward(self):
         return self.textures, self.vertices, self.faces
