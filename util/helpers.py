@@ -36,7 +36,7 @@ def random_eye_and_light():
                                (random.random() * .5) + .5,
                                (random.random() * .4) + .4]
 
-    eye = nr.get_points_from_angles((random.random() * .8) + 2.7,
+    eye = nr.get_points_from_angles((random.random() * .8) + 2.4,
                                     (random.random() * 15) + 20,
                                     random.random() * 360)
 
