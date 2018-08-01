@@ -50,7 +50,7 @@ def random_eye_and_light():
 import pdb
 def show_test(real, fake, art_mesh, art_test, transform, save=False):
     # Show and save
-    pdb.set_trace()
+    #pdb.set_trace()
     batch_size = fake.shape[0]
     fig, ax = plt.subplots(batch_size, 4, figsize=(11, 4*batch_size))
 

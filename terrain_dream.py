@@ -266,7 +266,7 @@ class TerrainDream:
 
             tex_a = self.v2t(self.model_dict['M'].textures.unsqueeze(0))
             tex_b = self.t2v(tex_a)
-            pdb.set_trace()
+            #pdb.set_trace()
             if self.loop_iter % params['save_img_every'] == 0:
                 helper.show_test(real,
                                  fake,

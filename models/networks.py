@@ -18,13 +18,14 @@ class Vert2Tri(nn.Module):
     # converts vertex colors into tri-strips for Neural Renderer, or back
     def __init__(self,conv = True):
         super(Vert2Tri, self).__init__()
+        state = torch.load('models/vert2strip.json')
 
         if conv:
             self.uv_conv = nn.Conv2d(3, 48, 2, stride=[1], padding=[0], bias=False, dilation=[1])
         else:
             self.uv_conv = nn.ConvTranspose2d(48, 3, 2, stride=[1], padding=[0], bias=False, dilation=[1])
+            state['weight'] = state['weight'].T
 
-        state = torch.load('models/vert2strip.json')
         self.uv_conv.load_state_dict(state)
 
         for a in self.uv_conv.parameters():
