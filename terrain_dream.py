@@ -80,7 +80,7 @@ class TerrainDream:
                                                kernel_size=4,
                                                layers=params["disc_layers"])
         self.v2t = n.Vert2Tri()
-        self.t2c = n.Vert2Tri()
+        self.t2v = n.Vert2Tri()
         self.render = n.Render(res=params["render_res"])
 
         self.v2t.cuda()
