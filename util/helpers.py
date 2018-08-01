@@ -47,10 +47,9 @@ def random_eye_and_light():
 # Display Images
 ############################################################################
 
-import pdb
+
 def show_test(real, fake, art_mesh, transform, save=False):
     # Show and save
-    #pdb.set_trace()
     batch_size = fake.shape[0]
     fig, ax = plt.subplots(batch_size, 3, figsize=(11, 4*batch_size))
 
@@ -59,12 +58,12 @@ def show_test(real, fake, art_mesh, transform, save=False):
         f = transform.denorm(fake.detach()[i], cpu=True, variable=False)
         m = transform.denorm(F.tanh(art_mesh.detach()[0]), cpu=True, variable=False)
 
-        ax[i,0].cla()
-        ax[i,0].imshow(r)
-        ax[i,1].cla()
-        ax[i,1].imshow(f)
-        ax[i,2].cla()
-        ax[i,2].imshow(m)
+        ax[i, 0].cla()
+        ax[i, 0].imshow(r)
+        ax[i, 1].cla()
+        ax[i, 1].imshow(f)
+        ax[i, 2].cla()
+        ax[i, 2].imshow(m)
 
     if save:
         plt.savefig(save)

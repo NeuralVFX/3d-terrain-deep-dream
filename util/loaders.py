@@ -168,7 +168,7 @@ class MountainDataset(Dataset):
         subset_ids = ids[:split_index]
         return subset_ids
 
-    def __init__(self,path, transform, output_res=256, perc=1):
+    def __init__(self, path, transform, output_res=256, perc=1):
         self.transform = transform
         self.path_list_a = glob.glob(f'/data/{path}/*/cyl/photo_crop.*')
         self.path_list_b = glob.glob(f'/data/{path}/*/cyl/labels_crop.*')
@@ -218,7 +218,7 @@ class GenericDataset(Dataset):
         subset_ids = ids[:split_index]
         return subset_ids
 
-    def __init__(self, path_a,transform, output_res=256, perc=1):
+    def __init__(self, path_a, transform, output_res=256, perc=1):
         self.transform = transform
         self.path_list_a = glob.glob(f'/data/{path_a}/*.*')
         self.output_res = output_res
@@ -246,12 +246,12 @@ class GenericDataset(Dataset):
         return self.ids.size
 
 
-def data_load(transform, batch_size, shuffle=False, output_res=128, perc=1, workers=1, generic = False, path_a = False):
+def data_load(transform, batch_size, shuffle=False, output_res=128, perc=1, workers=1, generic=False, path_a=False):
     # Wrapper for loader
     if generic:
         dataset = GenericDataset(path_a, transform, output_res=output_res, perc=perc)
     else:
-        dataset = MountainDataset(path_a,transform, output_res=output_res, perc=perc)
+        dataset = MountainDataset(path_a, transform, output_res=output_res, perc=perc)
 
     datalen = dataset.__len__()
     return torch.utils.data.DataLoader(dataset, batch_size=batch_size, num_workers=workers, shuffle=shuffle), datalen

@@ -1,25 +1,21 @@
 import time
 import torch
 import torch.optim as optim
-import torch.nn.functional as F
 import torch.nn as nn
 from tqdm import tqdm
 from torch.utils.data import *
 import matplotlib.pyplot as plt
-import pdb
-
-plt.switch_backend('agg')
-
 from util import helpers as helper
 from util import loaders as load
 from models import networks as n
 
-
+plt.switch_backend('agg')
 
 
 ############################################################################
 # Train
 ############################################################################
+
 
 class TerrainDream:
     """
@@ -99,8 +95,11 @@ class TerrainDream:
         self.dir_lgt_dir, self.dir_lgt_col, self.eye = helper.random_eye_and_light()
 
         # setup optimizers #
-        opt_params = [{'params': self.model_dict["M"].textures, 'lr': params["lr_tex"]},
-        {'params':self.model_dict["M"].vertices,'lr': params["lr_mesh"]}]
+        opt_params = [{'params': self.model_dict["M"].textures,
+                       'lr': params["lr_tex"]},
+                        {'params': self.model_dict["M"].vertices,
+                         'lr': params["lr_mesh"]}]
+
         self.opt_dict["M"] = optim.RMSprop(opt_params)
 
         print(f'Optimize Mesh:{params["opt_mesh"]}   Optimize Tex:{params["opt_tex"]}')
@@ -108,7 +107,6 @@ class TerrainDream:
             self.model_dict["M"].textures.requires_grad = False
         if not params["opt_mesh"]:
             self.model_dict["M"].vertices.requires_grad = False
-
 
         self.opt_dict["D"] = optim.RMSprop(self.model_dict["D"].parameters(), lr=params['lr_disc'])
         print('Optimizers Initialized')
@@ -183,7 +181,8 @@ class TerrainDream:
         if self.params["camera_pausing"] and not(iter_n % 300 == 0 or (self.current_iter < 600 and self.current_epoch == 0)):
                 update = False
                 print ('No Cam Update')
-        if update: self.dir_lgt_dir, self.dir_lgt_col, self.eye = helper.random_eye_and_light()
+        if update:
+            self.dir_lgt_dir, self.dir_lgt_col, self.eye = helper.random_eye_and_light()
         return self.dir_lgt_dir, self.dir_lgt_col, self.eye
 
     def train_disc(self, fake, real):
@@ -197,12 +196,11 @@ class TerrainDream:
         self.loss_batch_dict['D_Loss'].backward()
         self.opt_dict["D"].step()
 
-    def dream_on_mesh(self,batch_size = 1):
+    def dream_on_mesh(self, batch_size=1):
         # create render, and use discriminator to dream, backprop to the mesh#
         self.opt_dict["M"].zero_grad()
 
         tex, vert, face = self.model_dict["M"]()
-        #tex_prep = (F.tanh(tex_a).permute(0, 2, 3, 1).contiguous().view(1, face.shape[1], 2, 2, 2, 3) * .5) + .5
         vert_prep = vert.view(3, self.model_dict["M"].res,
                               self.model_dict["M"].res).transpose(0, 2).contiguous().view(1, -1, 3)
 
@@ -214,7 +212,7 @@ class TerrainDream:
                                 eye,
                                 light_dir=light_dir,
                                 light_color_directional=light_color_directional,
-                                batch_size = batch_size)
+                                batch_size=batch_size)
 
         fake = self.transform.norm(fake_data, tensor=True)
 
@@ -250,7 +248,7 @@ class TerrainDream:
 
                 # DREAM #
                 self.set_grad_req(d=False, g=True)
-                fake = self.dream_on_mesh(batch_size = real.shape[0])
+                fake = self.dream_on_mesh(batch_size=real.shape[0])
 
                 # TRAIN DISC #
                 self.set_grad_req(d=True, g=False)
@@ -263,11 +261,11 @@ class TerrainDream:
 
             self.current_epoch += 1
 
-
             if self.loop_iter % params['save_img_every'] == 0:
                 helper.show_test(real,
                                  fake,
-                                 self.t2v(self.model_dict['M'].textures.unsqueeze(0).view(1, 255,255,48).permute(0,3,1,2)),
+                                 self.t2v(self.model_dict['M'].textures.unsqueeze(0).view(
+                                     1, 255, 255, 48).permute(0, 3, 1, 2)),
                                  self.transform,
                                  save=f'output/{params["save_root"]}_{self.current_epoch}.jpg')
             save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')

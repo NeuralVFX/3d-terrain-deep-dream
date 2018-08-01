@@ -16,7 +16,7 @@ import neural_renderer as nr
 
 class Vert2Tri(nn.Module):
     # converts vertex colors into tri-strips for Neural Renderer, or back
-    def __init__(self,conv = True):
+    def __init__(self, conv=True):
         super(Vert2Tri, self).__init__()
         state = torch.load('models/vert2strip.json')
 
@@ -30,6 +30,7 @@ class Vert2Tri(nn.Module):
 
         for a in self.uv_conv.parameters():
             a.requires_grad = False
+
     def forward(self, x): return self.uv_conv(x)
 
 
@@ -120,20 +121,19 @@ class Render(nn.Module):
         self.renderer = renderer
         self.rotation_array = self.generate_rotation_array(1)
 
-    def generate_rotation_array(self,batch_size):
+    def generate_rotation_array(self, batch_size):
         rot_list = []
         for a in range(batch_size):
-            rotation_matrix = cv2.getRotationMatrix2D((0,0),(a / batch_size) * 360,1)
-            rotation_matrix = np.array([[rotation_matrix[0][0],0,rotation_matrix[0][1]],
-                                        [0,1,0],
+            rotation_matrix = cv2.getRotationMatrix2D((0, 0), (a / batch_size) * 360, 1)
+            rotation_matrix = np.array([[rotation_matrix[0][0], 0, rotation_matrix[0][1]],
+                                        [0, 1, 0],
                                         [rotation_matrix[1][0], 0, rotation_matrix[1][1]]])
 
             rot_list.append(np.copy(rotation_matrix))
 
         batch_rot = torch.FloatTensor(np.array(rot_list)).cuda()
-        batch_rot.requires_grad =False
+        batch_rot.requires_grad = False
         return batch_rot
-
 
     def forward(self,
                 vertices,
@@ -143,7 +143,7 @@ class Render(nn.Module):
                 light_dir=[.5, .5, .5],
                 light_color_directional=[.8, 1, .7],
                 light_color_ambient=[1, 1.2, 1.2],
-                batch_size = 1):
+                batch_size=1):
 
         if batch_size != self.rotation_array.shape[0]:
             self.rotation_array = self.generate_rotation_array(batch_size)
@@ -153,10 +153,10 @@ class Render(nn.Module):
         self.renderer.light_color_ambient = light_color_ambient
         self.renderer.eye = eye
 
-        transformerd_verts = torch.matmul(vertices.expand(batch_size, -1, -1),self.rotation_array )
+        transformerd_verts = torch.matmul(vertices.expand(batch_size, -1, -1), self.rotation_array)
         return self.renderer(transformerd_verts,
-                             faces.expand(batch_size,-1,-1),
-                             textures.expand(batch_size,-1,-1,-1,-1,-1))
+                             faces.expand(batch_size, -1, -1),
+                             textures.expand(batch_size, -1, -1, -1, -1, -1))
 
 
 class Discriminator(nn.Module):
