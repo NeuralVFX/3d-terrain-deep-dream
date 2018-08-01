@@ -80,9 +80,11 @@ class TerrainDream:
                                                kernel_size=4,
                                                layers=params["disc_layers"])
         self.v2t = n.Vert2Tri()
+        self.t2c = n.Vert2Tri()
         self.render = n.Render(res=params["render_res"])
 
         self.v2t.cuda()
+        self.t2v.cuda()
         self.render.cuda()
         self.model_dict["D"].apply(helper.weights_init_normal)
 
@@ -261,10 +263,16 @@ class TerrainDream:
 
             self.current_epoch += 1
 
+            tex, vert, face = self.model_dict["M"]()
+            tex_a = self.v2t(tex.unsqueeze(0))
+            tex_prep = (tex_a.permute(0, 2, 3, 1).contiguous().view(1, face.shape[1], 2, 2, 2, 3) * .5) + .5
+            tex_a = self.t2v(tex_prep)
+
             if self.loop_iter % params['save_img_every'] == 0:
                 helper.show_test(real,
                                  fake,
                                  self.model_dict['M'].textures.unsqueeze(0),
+                                 tex_a,
                                  self.transform,
                                  save=f'output/{params["save_root"]}_{self.current_epoch}.jpg')
             save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')

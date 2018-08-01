@@ -48,7 +48,7 @@ def random_eye_and_light():
 ############################################################################
 
 
-def show_test(real, fake, art_mesh, transform, save=False):
+def show_test(real, fake, art_mesh, art_test, transform, save=False):
     # Show and save
 
     batch_size = fake.shape[0]
@@ -58,6 +58,7 @@ def show_test(real, fake, art_mesh, transform, save=False):
         r = transform.denorm(real.detach()[i], cpu=True, variable=False)
         f = transform.denorm(fake.detach()[i], cpu=True, variable=False)
         m = transform.denorm(F.tanh(art_mesh.detach()[0]), cpu=True, variable=False)
+        m_test = transform.denorm(F.tanh(art_test.detach()[0]), cpu=True, variable=False)
 
         ax[i,0].cla()
         ax[i,0].imshow(r)
@@ -65,6 +66,8 @@ def show_test(real, fake, art_mesh, transform, save=False):
         ax[i,1].imshow(f)
         ax[i,2].cla()
         ax[i,2].imshow(m)
+        ax[i,3].cla()
+        ax[i,3].imshow(m_test)
     if save:
         plt.savefig(save)
     plt.show()
