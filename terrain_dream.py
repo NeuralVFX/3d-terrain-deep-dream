@@ -179,7 +179,7 @@ class TerrainDream:
         iter_n = self.loop_iter
         update = True
         if self.params["camera_pausing"] and not(
-                iter_n % 300 == 0 or (self.current_iter < self.params['cam_stall_len'] and self.current_epoch == 0)):
+                iter_n % 300 == 0 or (self.current_iter < self.params['cam_pause_len'] and self.current_epoch == 0)):
                 update = False
                 print ('No Cam Update')
         if update:
