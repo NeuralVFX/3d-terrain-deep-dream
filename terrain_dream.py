@@ -24,22 +24,27 @@ class TerrainDream:
     """
     Example usage if not using command line:
 
-    %matplotlib inline # use if in Jupyter Notebook
-
     params = {
-        'obj_file':'geo/grid_256.obj',
-        'dem_file':'dem/USGS/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img',
+        'obj_file':'/geo/grid_256.obj',
+        'dem_file':'dem/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img',
         'disc_layers': 4,
         'disc_filters': 512,
         'lr_disc': .001,
-        'lr_mesh': .001,
-        'data_perc': .01,
-        'train_epoch': 200,
+        'lr_tex': .001,
+        'lr_mesh': .0005,
+        'opt_mesh': False,
+        'opt_tex': True,
+        'use_generic_dataset': False,
+        'generic_dataset': 'geoPose3K_final_publish',
+        'data_perc': 1,
+        'train_epoch': 5,
         'disc_layers': 4,
-        'render_res':256,
+        'render_res': 256,
         'save_root': 'austria',
         'save_every': 1,
-        'loader_workers': 1}
+        'save_img_every': 1,
+        'batch_size' :8,
+        'loader_workers': 8}
 
     dream = TerrainDream(params)
     dream.train()
@@ -171,8 +176,10 @@ class TerrainDream:
     def get_eye_and_light(self):
         # create random lighting and camera for render, stochastic for 600 epochs, then only changes every 300
         iter_n = self.loop_iter
-        if iter_n % 300 == 0 or (self.current_iter < 600 and self.current_epoch == 0):
-            self.dir_lgt_dir, self.dir_lgt_col, self.eye = helper.random_eye_and_light()
+        update = True
+        if self.params["camera_pausing"] and not(iter_n % 300 == 0 or (self.current_iter < 600 and self.current_epoch == 0)):
+                update = False
+        if update: self.dir_lgt_dir, self.dir_lgt_col, self.eye = helper.random_eye_and_light()
         return self.dir_lgt_dir, self.dir_lgt_col, self.eye
 
     def train_disc(self, fake, real):
@@ -245,8 +252,6 @@ class TerrainDream:
                 # TRAIN DISC #
                 self.set_grad_req(d=True, g=False)
                 self.train_disc(fake, real)
-
-
 
                 # append all losses in loss dict #
                 [self.loss_epoch_dict[loss].append(self.loss_batch_dict[loss].data.item()) for loss in self.losses]
