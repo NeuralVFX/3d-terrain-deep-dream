@@ -6,6 +6,7 @@ import torch.nn as nn
 from tqdm import tqdm
 from torch.utils.data import *
 import matplotlib.pyplot as plt
+import pdb
 
 plt.switch_backend('agg')
 
@@ -264,13 +265,13 @@ class TerrainDream:
             self.current_epoch += 1
 
             tex_a = self.v2t(self.model_dict['M'].textures.unsqueeze(0))
-            tex_a = self.t2v(tex_a)
-
+            tex_b = self.t2v(tex_a)
+            pdb.set_trace()
             if self.loop_iter % params['save_img_every'] == 0:
                 helper.show_test(real,
                                  fake,
                                  self.model_dict['M'].textures.unsqueeze(0),
-                                 tex_a,
+                                 tex_b,
                                  self.transform,
                                  save=f'output/{params["save_root"]}_{self.current_epoch}.jpg')
             save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
