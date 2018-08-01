@@ -80,7 +80,7 @@ class TerrainDream:
                                                kernel_size=4,
                                                layers=params["disc_layers"])
         self.v2t = n.Vert2Tri()
-        self.t2v = n.Vert2Tri()
+        self.t2v = n.Vert2Tri(conv =False)
         self.render = n.Render(res=params["render_res"])
 
         self.v2t.cuda()
@@ -265,8 +265,8 @@ class TerrainDream:
 
             tex, vert, face = self.model_dict["M"]()
             tex_a = self.v2t(tex.unsqueeze(0))
-            tex_prep = (tex_a.permute(0, 2, 3, 1).contiguous().view(1, face.shape[1], 2, 2, 2, 3) * .5) + .5
-            tex_a = self.t2v(tex_prep)
+            #tex_prep = (tex_a.permute(0, 2, 3, 1).contiguous().view(1, face.shape[1], 2, 2, 2, 3) * .5) + .5
+            tex_a = self.t2v(tex_a)
 
             if self.loop_iter % params['save_img_every'] == 0:
                 helper.show_test(real,
