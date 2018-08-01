@@ -267,7 +267,7 @@ class TerrainDream:
             if self.loop_iter % params['save_img_every'] == 0:
                 helper.show_test(real,
                                  fake,
-                                 self.t2v(self.model_dict['M'].textures.unsqueeze(0)),
+                                 self.t2v(self.model_dict['M'].textures.unsqueeze(0).view(1, 255,255,48).permute(0,3,1,2)),
                                  self.transform,
                                  save=f'output/{params["save_root"]}_{self.current_epoch}.jpg')
             save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
