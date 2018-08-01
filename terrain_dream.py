@@ -179,6 +179,7 @@ class TerrainDream:
         update = True
         if self.params["camera_pausing"] and not(iter_n % 300 == 0 or (self.current_iter < 600 and self.current_epoch == 0)):
                 update = False
+                print ('No Cam Update')
         if update: self.dir_lgt_dir, self.dir_lgt_col, self.eye = helper.random_eye_and_light()
         return self.dir_lgt_dir, self.dir_lgt_col, self.eye
 
