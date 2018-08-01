@@ -52,7 +52,7 @@ def show_test(real, fake, art_mesh, art_test, transform, save=False):
     # Show and save
 
     batch_size = fake.shape[0]
-    fig, ax = plt.subplots(batch_size, 3, figsize=(11, 4*batch_size))
+    fig, ax = plt.subplots(batch_size, 4, figsize=(11, 4*batch_size))
 
     for i in range(batch_size):
         r = transform.denorm(real.detach()[i], cpu=True, variable=False)
