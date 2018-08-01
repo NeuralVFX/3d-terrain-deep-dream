@@ -263,9 +263,7 @@ class TerrainDream:
 
             self.current_epoch += 1
 
-            tex, vert, face = self.model_dict["M"]()
-            tex_a = self.v2t(tex.unsqueeze(0))
-            #tex_prep = (tex_a.permute(0, 2, 3, 1).contiguous().view(1, face.shape[1], 2, 2, 2, 3) * .5) + .5
+            tex_a = self.v2t(self.model_dict['M'].textures.unsqueeze(0))
             tex_a = self.t2v(tex_a)
 
             if self.loop_iter % params['save_img_every'] == 0:
