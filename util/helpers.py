@@ -29,12 +29,12 @@ def mft(tensor):
 
 def random_eye_and_light():
     light_dir = [(random.random() - .5) * 2,
-                 random.random(),
+                 random.random()+.3,
                  (random.random() - .5) * 2]
 
-    light_color_directional = [(random.random() * .5) + 1,
-                               (random.random() * .5) + 1,
-                               (random.random() * .5) + .75]
+    light_color_directional = [(random.random() * .5) + .5,
+                               (random.random() * .5) + .5,
+                               (random.random() * .4) + .4]
 
     eye = nr.get_points_from_angles((random.random() * .8) + 1.7,
                                     (random.random() * 15) + 20,
