@@ -94,9 +94,14 @@ class Model(nn.Module):
         self.vertices = nn.Parameter(vertices)
 
         # Initialize random textures
+        v2t = Vert2Tri()
+        v2t.cuda()
+
         blurry_noise = gaussian_filter(np.random.normal(0, 1, (3, self.res, self.res)), sigma=3)
         textures = torch.FloatTensor(blurry_noise).cuda()
-        self.textures = nn.Parameter(textures)
+        textures = v2t(textures.unsqueeze(0)).squeeze()
+
+        self.textures = nn.Parameter(textures.permute(0, 2, 3, 1).contiguous().view(1, self.face.shape[1], 2, 2, 2, 3))
 
     def forward(self):
         return self.textures, self.vertices, self.faces

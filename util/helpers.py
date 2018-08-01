@@ -48,7 +48,7 @@ def random_eye_and_light():
 ############################################################################
 
 import pdb
-def show_test(real, fake, art_mesh, art_test, transform, save=False):
+def show_test(real, fake, art_mesh, transform, save=False):
     # Show and save
     #pdb.set_trace()
     batch_size = fake.shape[0]
@@ -57,7 +57,6 @@ def show_test(real, fake, art_mesh, art_test, transform, save=False):
     for i in range(batch_size):
         r = transform.denorm(real.detach()[i], cpu=True, variable=False)
         f = transform.denorm(fake.detach()[i], cpu=True, variable=False)
-        m = transform.denorm(F.tanh(art_test.detach()[0]), cpu=True, variable=False)
         m_test = transform.denorm(F.tanh(art_mesh.detach()[0]), cpu=True, variable=False)
 
         ax[i,0].cla()

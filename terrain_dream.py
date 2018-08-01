@@ -202,8 +202,8 @@ class TerrainDream:
         self.opt_dict["M"].zero_grad()
 
         tex, vert, face = self.model_dict["M"]()
-        tex_a = self.v2t(tex.unsqueeze(0))
-        tex_prep = (F.tanh(tex_a).permute(0, 2, 3, 1).contiguous().view(1, face.shape[1], 2, 2, 2, 3) * .5) + .5
+        tex = tex.unsqueeze(0)
+        #tex_prep = (F.tanh(tex_a).permute(0, 2, 3, 1).contiguous().view(1, face.shape[1], 2, 2, 2, 3) * .5) + .5
         vert_prep = vert.view(3, self.model_dict["M"].res,
                               self.model_dict["M"].res).transpose(0, 2).contiguous().view(1, -1, 3)
 
@@ -211,7 +211,7 @@ class TerrainDream:
 
         fake_data = self.render(vert_prep,
                                 face,
-                                tex_prep,
+                                tex,
                                 eye,
                                 light_dir=light_dir,
                                 light_color_directional=light_color_directional,
@@ -264,14 +264,11 @@ class TerrainDream:
 
             self.current_epoch += 1
 
-            tex_a = self.v2t(self.model_dict['M'].textures.unsqueeze(0))
-            tex_b = self.t2v(tex_a)
-            #pdb.set_trace()
+
             if self.loop_iter % params['save_img_every'] == 0:
                 helper.show_test(real,
                                  fake,
-                                 self.model_dict['M'].textures.unsqueeze(0),
-                                 tex_b,
+                                 self.t2v(self.model_dict['M'].textures.unsqueeze(0)),
                                  self.transform,
                                  save=f'output/{params["save_root"]}_{self.current_epoch}.jpg')
             save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
