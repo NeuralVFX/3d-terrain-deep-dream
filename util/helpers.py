@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch
 import matplotlib.pyplot as plt
 import neural_renderer as nr
+import torch.nn.functional as F
+
 
 plt.switch_backend('agg')
 
@@ -55,7 +57,7 @@ def show_test(real, fake, art_mesh, transform, save=False):
     for i in range(batch_size):
         r = transform.denorm(real.detach()[i], cpu=True, variable=False)
         f = transform.denorm(fake.detach()[i], cpu=True, variable=False)
-        m = transform.denorm(art_mesh.detach()[0], cpu=True, variable=False)
+        m = transform.denorm(F.tanh(art_mesh.detach()[0]), cpu=True, variable=False)
 
         ax[i,0].cla()
         ax[i,0].imshow(r)
