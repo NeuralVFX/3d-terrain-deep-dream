@@ -178,8 +178,8 @@ class TerrainDream:
         # create random lighting and camera for render, stochastic for 600 epochs, then only changes every 300
         iter_n = self.loop_iter
         update = True
-        if self.params["camera_pausing"] and not(
-                iter_n % 300 == 0 or (self.current_iter < self.params['cam_pause_len'] and self.current_epoch == 0)):
+        if self.params["camera_pausing"] and not\
+                ((iter_n % self.params['cam_pause_len'] == 0) or (self.current_epoch == 0)):
                 update = False
                 print ('No Cam Update')
         if update:
