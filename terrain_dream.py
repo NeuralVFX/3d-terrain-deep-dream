@@ -268,7 +268,7 @@ class TerrainDream:
                 helper.show_test(real,
                                  fake,
                                  self.t2v(self.model_dict['M'].textures.unsqueeze(0).view(
-                                     1, params['mesh_res'], params['mesh_res'], 48).permute(0, 3, 1, 2)),
+                                     1, params['mesh_res']-1, params['mesh_res']-1, 48).permute(0, 3, 1, 2)),
                                  self.transform,
                                  save=f'output/{params["save_root"]}_{self.current_epoch}.jpg')
             save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
