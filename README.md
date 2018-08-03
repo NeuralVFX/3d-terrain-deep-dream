@@ -9,5 +9,5 @@ I've tested this using the [GeoPose3k Dataset](http://cphoto.fit.vutbr.cz/geoPos
 Usage instructions found here: [user manual page](USAGE.md).
 
 ## Example Output
-### GeoPose3k Bedroom Dataset
+### GeoPose3k Dataset
 ![](output/austria_01.jpg)
