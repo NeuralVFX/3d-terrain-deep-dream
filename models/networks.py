@@ -85,8 +85,9 @@ class Model(nn.Module):
         print(f'Loading DEM: {dem}')
         geo = gdal.Open(dem)
         geo_arr = geo.ReadAsArray()
-        geo_arr = np.nan_to_num(geo_arr)
         scaled_down = cv2.resize(geo_arr, (self.res, self.res), interpolation=cv2.INTER_AREA)
+        scaled_down[np.isinf(scaled_down)] = 0
+        scaled_down[np.isnan(scaled_down)] = 0
         scaled_down = ((scaled_down - scaled_down.mean()) / scaled_down.std()) * .2
 
         # Replace grid y axis with height from DEM
