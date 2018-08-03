@@ -97,7 +97,7 @@ class Model(nn.Module):
     # Loaded for DEM file, and storage for out textures
     def __init__(self, res,dem):
         super(Model, self).__init__()
-        print(f'Building Grid: {geo}')
+        print(f'Building Grid: {res}x{res}')
         faces, vertices  = make_xyz_grid(res)
         self.faces = faces
         self.res = res
