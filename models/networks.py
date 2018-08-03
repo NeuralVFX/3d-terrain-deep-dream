@@ -70,24 +70,43 @@ class ConvTrans(nn.Module):
 ############################################################################
 
 
+def make_xyz_grid(res):
+    # build vertex and face data from scratch
+    vert_id_weights = [[1, 0], [0, 0], [0, 1], [0, 0], [0, 0], [0, 1], [1, 0], [0, 0], [0, 0], [0, 1], [0, 0], [1, 0]]
+    weights = np.asarray(vert_id_weights, dtype='float32').reshape(6, 1, 2, 2)
+    vert_id_weights = torch.FloatTensor(weights).cuda()
+    faces_conv = nn.Conv2d(1, 6, 2, stride=[1], padding=[0], bias=False, dilation=[1]).cuda()
+    faces_conv.weight = nn.Parameter(vert_id_weights)
+
+    # use convolution to convert vert_ids to face centric vert id map
+    x = torch.FloatTensor(np.arange(res * res).reshape(res, res)).cuda()
+    vert_ids = faces_conv(x.view(1, 1, res, res))
+    vert_ids = vert_ids.permute(0, 2, 3, 1).contiguous().view(1, (res - 1) * (res - 1) * 2, 3)
+
+    # build XYZ vertex coordinate grid
+    coords = np.arange(-1, 1 + 2.0 / (res - 1), 2.0 / (res - 1))
+    grid = np.concatenate([np.meshgrid(coords, coords)[0].reshape(1, res, res),
+                           np.zeros([1, res, res]),
+                           np.moveaxis(-np.meshgrid(coords, coords)[0].reshape(1, res, res), (1, 2), (2, 1))],
+                          axis=0)
+    vert_grid = torch.FloatTensor(grid).cuda()
+    return vert_ids, vert_grid
+
+
 class Model(nn.Module):
     # Loaded for DEM file, and storage for out textures
-    def __init__(self, geo, dem):
+    def __init__(self, res,dem):
         super(Model, self).__init__()
-        print(f'Loading OBJ: {geo}')
-        vertices, faces = nr.load_obj(f'./{geo}')
-        self.res = int(math.sqrt(vertices.shape[0]))
-        vertices = vertices[None, :, :]
-        vertices = vertices.transpose(0, 2).view(3, self.res, self.res)
-        self.faces = faces[None, :, :]
+        print(f'Building Grid: {geo}')
+        faces, vertices  = make_xyz_grid(res)
+        self.faces = faces
+        self.res = res
 
         # Load_dem
         print(f'Loading DEM: {dem}')
         geo = gdal.Open(dem)
         geo_arr = geo.ReadAsArray()
         scaled_down = cv2.resize(geo_arr, (self.res, self.res), interpolation=cv2.INTER_AREA)
-        scaled_down[np.isinf(scaled_down)] = 0
-        scaled_down[np.isnan(scaled_down)] = 0
         scaled_down = ((scaled_down - scaled_down.mean()) / scaled_down.std()) * .2
 
         # Replace grid y axis with height from DEM
@@ -99,7 +118,6 @@ class Model(nn.Module):
         # Initialize random textures
         v2t = Vert2Tri()
         v2t.cuda()
-
         blurry_noise = gaussian_filter(np.random.normal(0, 1, (3, self.res, self.res)), sigma=3)
         textures = torch.FloatTensor(blurry_noise).cuda()
         textures = v2t(textures.unsqueeze(0))
