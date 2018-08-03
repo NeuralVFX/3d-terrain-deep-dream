@@ -81,7 +81,7 @@ def make_xyz_grid(res):
     # use convolution to convert vert_ids to face centric vert id map
     x = torch.FloatTensor(np.arange(res * res).reshape(res, res)).cuda()
     vert_ids = faces_conv(x.view(1, 1, res, res))
-    vert_ids = vert_ids.permute(0, 2, 3, 1).contiguous().view(1, (res - 1) * (res - 1) * 2, 3)
+    vert_ids = vert_ids.permute(0, 2, 3, 1).contiguous().view(1, (res - 1) * (res - 1) * 2, 3).int()
 
     # build XYZ vertex coordinate grid
     coords = np.arange(-1, 1 + 2.0 / (res - 1), 2.0 / (res - 1))
