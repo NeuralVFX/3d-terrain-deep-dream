@@ -12,5 +12,5 @@ Usage instructions found here: [user manual page](USAGE.md).
 
 ## Example Output
 ### GeoPose3k Dataset
-#### 1) Refernce Image  2) Generated Texture Render  3) Generated Texture in UV Space
+#### 1) Reference Image  2) Generated Texture Render  3) Generated Texture in UV Space
 ![](output/austria_01.jpg)
