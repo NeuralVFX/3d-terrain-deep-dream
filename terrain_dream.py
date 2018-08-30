@@ -193,9 +193,7 @@ class TerrainDream:
         self.opt_dict["D"].zero_grad()
         disc_result_fake = self.model_dict["D"](fake.detach())
         disc_result_real = self.model_dict["D"](real)
-        disc_loss_fake = self.l1_loss(disc_result_fake, torch.zeros_like(disc_result_fake)) ** 2
-        disc_loss_real = self.l1_loss(disc_result_real, torch.ones_like(disc_result_fake)) ** 2
-        self.loss_batch_dict['D_Loss'] = (disc_loss_fake + disc_loss_real) * .5
+        self.loss_batch_dict['D_Loss'] = 0.5 * (torch.mean((disc_result_real - 1)**2) + torch.mean(disc_result_fake**2))
         self.loss_batch_dict['D_Loss'].backward()
         self.opt_dict["D"].step()
 
@@ -223,7 +221,7 @@ class TerrainDream:
         fake = (fake * .9) + (.1 * torch.FloatTensor(fake.shape).normal_(0, .5).cuda())
 
         disc_result_fake = self.model_dict["D"](fake)
-        self.loss_batch_dict['M_Loss'] = (self.l1_loss(disc_result_fake, torch.ones_like(disc_result_fake)) ** 2) * .5
+        self.loss_batch_dict['M_Loss'] = ( 0.5 * torch.mean((disc_result_fake - 1)**2))
         self.loss_batch_dict['M_Loss'].backward()
         self.opt_dict["M"].step()
         return fake
