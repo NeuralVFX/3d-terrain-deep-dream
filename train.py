@@ -12,7 +12,7 @@ parser.add_argument('--grid_res', nargs='?', default=256, type=int)
 parser.add_argument('--dem_file', nargs='?',
                     default='dem/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img', type=str)
 parser.add_argument('--disc_filters', nargs='?', default=512, type=int)
-parser.add_argument('--disc_layers', nargs='?', default=4, type=int)
+parser.add_argument('--disc_layers', nargs='?', default=6, type=int)
 parser.add_argument('--lr_disc', nargs='?', default=.001, type=float)
 parser.add_argument('--lr_mesh', nargs='?', default=.0001, type=float)
 parser.add_argument('--lr_tex', nargs='?', default=.001, type=float)
