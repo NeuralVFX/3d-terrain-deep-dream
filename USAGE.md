@@ -11,15 +11,14 @@
 git clone https://github.com/NeuralVFX/3d-terrain-deep-dream.git
 cd 3d-terrain-deep-dream
 ```
-
 - Download the image dataset [GeoPose3K](http://cphoto.fit.vutbr.cz/geoPose3K/):
-
-- Extract into `data/geoPose3K_final_publish`  (I don't have a shell script for this yet)
-
+```bash
+bash data/get_test_dataset.sh
+```
 - Download a DEM file (e.g.[USGS Central-Colorado](https://www.sciencebase.gov/catalog/item/5acecd0ee4b0e2c2dd1a6acf))
-
-- Extract into `dem/`
-
+```bash
+bash dem/get_test_dem.sh
+```
 ## Train The Model
 ```bash
 python train.py --render_res 256 --train_epoch 50 --save_root austria
@@ -66,8 +65,8 @@ python train.py --load_state output/austria_3.json --render_res 256 --train_epoc
 - Loss Graph Example: `output/austria_loss.jpg`
 ![](output/austria_loss.jpg)
 
-- Test Image Example (output every loop through dataset): `output/austria_6.jpg`
-![](output/austria_6.jpg)
+- Test Image Example (output every loop through dataset): `output/austria_05.jpg`
+![](output/austria_05.jpg)
 
 ## Other Notes
 
