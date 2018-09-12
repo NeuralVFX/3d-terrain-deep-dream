@@ -32,16 +32,24 @@ python train.py --load_state output/austria_3.json --render_res 256 --train_epoc
 ## Command Line Arguments
 
 ```
---obj_file', default='/geo/grid_256.obj', type=str      # Obj file  - must be a square grid
---dem_file, default='/dem/USGS_NED_one_meter_x34y441_CO_Central_Western_2016_IMG_2018.img',
-                                    type=str            # Train folder name
---disc_layers', default=3, type=int                     # Count of conv layers in discriminator
---disc_filters', default=512, type=int                  # Filter count for discrimintors
---lr_disc', default=.001, type=float                    # Learning rate for discriminator
---lr_mesh', default=.001, type=float                    # Learning rate for texture on mesh
---render_res', default=256, type=int                    # Image size for both Neural Render and Dataloader
---train_epoch', default=6, type=int                     # Number lookps trough training set
+--dem_file, default='x34y441_CO.img', type=str          # Train folder name
+--grid_res, default=256, type=int                       # Resolution of mesh grid
+--disc_layers, default=7, type=int                      # Count of conv layers in discriminator
+--disc_filters, default=512, type=int                   # Filter count for discriminators
+--lr_disc, default=.05, type=float                      # Learning rate for discriminator
+--lr_tex, default=.01, type=float                       # Learning rate for texture on mesh
+--lr_mesh, default=.0001, type=float                    # Learning rate for verts on mesh
+--render_res, default=256, type=int                     # Image size for both Neural Render and Dataloader
+--use_generic_dataset, default=False, type=bool         # If generic, "dataset" is simply used as a searchpath for images, otherwise geoPose3k is assumed
+--dataset, default='geoPose3K_final_publish', type=str  # Dataset folder
+--opt_mesh default=False, type=bool                     # Allow grad on mesh
+--opt_tex, default=True, type=bool                      # Allow grad on texture
+--batch_size, default=8, type=int                       # Batchsize for dataloader
+--camera_pausing default=False, type=bool               # Stall camera for "cam_pause_len" iterations during dreaming
+--cam_pause_len, default=30, type=int                   # Number of iterations to pause camera before each reset
+--train_epoch', default=6, type=int                     # Number loops trough training set
 --save_every', default=1, type=int                      # How many epochs to train between every save
+--save_img_every', default=1, type=int                  # How many epochs to train between every image save
 --load_workers', default=1, type=int                    # How many workers the data loader should use
 --data_perc', default=1, type=float                     # Percentage of dataset to use, selected with fixed random seed
 --save_root', default='lsun_test', type=str             # Prefix for files created by the model under the /output directory
