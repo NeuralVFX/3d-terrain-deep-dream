@@ -64,7 +64,7 @@ class TerrainDream:
                                                           perc=params['data_perc'],
                                                           workers=params['loader_workers'],
                                                           generic=params['use_generic_dataset'],
-                                                          path_a=params['generic_dataset'])
+                                                          path_a=params['dataset'])
 
         print(f'Data Loader Initialized: {self.data_len} Images')
 

@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("cmd", help=argparse.SUPPRESS, nargs="*")
 parser.add_argument('--use_generic_dataset', nargs='?', default=False, type=bool)
-parser.add_argument('--generic_dataset', nargs='?', default='geoPose3K_final_publish', type=str)
+parser.add_argument('--dataset', nargs='?', default='geoPose3K_final_publish', type=str)
 parser.add_argument('--grid_res', nargs='?', default=256, type=int)
 parser.add_argument('--dem_file', nargs='?',
                     default='x34y441_CO.img', type=str)
