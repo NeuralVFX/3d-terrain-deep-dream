@@ -69,7 +69,7 @@ class TerrainDream:
         print(f'Data Loader Initialized: {self.data_len} Images')
 
         self.model_dict["M"] = n.Model(params["grid_res"],
-                                       params["dem_file"])
+                                       f'dem/{params["dem_file"]}')
 
         self.model_dict["D"] = n.Discriminator(channels=3,
                                                filts=params["disc_filters"],
